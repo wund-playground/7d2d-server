@@ -1,0 +1,38 @@
+---
+version: "3"
+services:
+  7dtd-server-new:
+    image: cryptton2004/7dtd-server-new
+    container_name: 7dtd-server-new
+    environment:
+      # | SEVEN_DAYS_TO_DIE_START_MODE   | 0 (Default) | server should update and then start |
+      # | SEVEN_DAYS_TO_DIE_START_MODE | 1 | server should only update |
+      # | SEVEN_DAYS_TO_DIE_START_MODE | 2 | server should only start |
+      - SEVEN_DAYS_TO_DIE_START_MODE=0
+      # ```SEVEN_DAYS_TO_DIE_UPDATE_CHECKING``` is ```"0"``` 
+      # *Fully automatic updates*(default = disabled). Once a server update hits Steam, it will restart the server and trigger the automatic update. You can enable this by setting ```SEVEN_DAYS_TO_DIE_UPDATE_CHECKING``` to ```"1"```
+      - SEVEN_DAYS_TO_DIE_UPDATE_CHECKING=1
+      - SEVEN_DAYS_TO_DIE_SERVER_PASSWORD=${SEVEN_DAYS_TO_DIE_SERVER_PASSWORD}
+      - SEVEN_DAYS_TO_DIE_TELNET_PASSWORD=${SEVEN_DAYS_TO_DIE_TELNET_PASSWORD}
+      - SEVEN_DAYS_TO_DIE_TELNET_PORT=${SEVEN_DAYS_TO_DIE_TELNET_PORT}
+      - SEVEN_DAYS_TO_DIE_SERVER_STARTUP_ARGUMENTS=-quit -batchmode -nographics -dedicated
+      - SEVEN_DAYS_TO_DIE_CONFIG_FILE=/app/.local/share/7DaysToDie/serverconfig.xml
+    ports:
+      # | Game ports. If you connect to 26900, you need to fwd 26900 (+3): 26901, 26902, 26903 | 26900 (Default) |  |
+      # | If you want another instance, change the ports accordingly. | Example for 26905: 26905, 26906, 26907, 26908 |  |
+      # | Just make sure you've got no collisions. You won't be able to have two docker instances running in parralel out of the box like this: one on port 26900 and one on 26901 |
+      - "26905:26905/tcp"
+      - "26905:26905/udp"
+      - "26906:26906/udp"
+      - "26907:26907/udp"
+      - "26908:26908/udp"
+      # | Not officially required but server misbihaves when not forwarding something in this range: 27010-27020 | 27016 (Default) |  |
+      - "27016:27016/udp"
+      # | Telnet ports | 8080/tcp & 8081/tcp (Default) |  |
+      - "8085:8085/tcp"
+      - "8086:8086/tcp"
+    volumes:
+      - ./7dtd_data/data/:/app/.local/share/7DaysToDie
+      - ./7dtd_data/game/:/steamcmd/7dtd
+      - ./7dtd_data/mods/:/steamcmd/7dtd/Mods
+    restart: unless-stopped
