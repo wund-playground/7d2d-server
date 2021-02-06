@@ -1,0 +1,15 @@
+builds:
+  7d2d-server-new:
+    context: /
+    dockerfile: Dockerfile
+    pushes:
+      - "on_branch:master=wund-playground/7d2d-server"
+    labels:
+      - "org.label-schema.vendor=Worlds Under Development - Playground"
+      - "org.label-schema.name=7 Days To Die server - Docker"
+      - "org.label-schema.version=latest"
+      - "org.label-schema.description=Docker image for 7 Days To Die server."
+      - "org.label-schema.url=https://github.com/wund-playground/7d2d-server"
+      - "org.label-schema.vcs-url=github.com:wund-playground/7d2d-server.git"
+      - "org.label-schema.vcs-ref={fcommitid}"
+      - "org.label-schema.schema-version=1.0"
